@@ -30,7 +30,8 @@ This is a simple Discord bot written in python.
     ```
 4. If you don't have dotenv library use command `pip3 install python-dotenv` to install dotenv. This is required so your script can load the .env file and read the Discord Token.
  
-
+5. Install configparser by running `pip3 install ConfigParser`
+   
 ### Run Discord bot:
 Once you have installed the requirements, you can run the discord bot by running `python3 bot.py`.
 
