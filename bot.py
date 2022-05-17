@@ -12,14 +12,53 @@ import random
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
+import configparser
+import inspect
+
+### Global Vars
+config_dict = {} #dictionary that contains the config
+
+### Global Constants
+DEFAULTCONFIGFILE = 'botconfig.ini'
+DEFAULTCOMMANDPREFIX = 'b!'
+DEFAULTCOMMANDFOLDER = '.\commands'
+DEBUG = 1
+
+def debug_message(message):
+    global DEBUG
+    if (DEBUG):
+        print ("---DEBUG Message:", inspect.stack()[1].function , "() :" , inspect.stack()[1].lineno , " - " , message)
+        
+
+def load_config():
+    try:
+        global config_dict
+        config = configparser.ConfigParser()
+        config.read({DEFAULTCONFIGFILE}) 
+        config_dict = dict(config.items('botconfig'))
+        debug_message(config_dict)
+
+    except:
+        print ("Failed to read or parsing {DEFAULTCONFIGFILE} file. Loading Default Config...")
+        config_dict['command_prefix'] = DEFAULTCOMMANDPREFIX
+        config_dict['command_folder'] = DEFAULTCOMMANDFOLDER
+    
+    print ("Following settings are loaded:")    
+    print ("command_prefix:", config_dict['command_prefix'])    
+    print ("command_folder:", config_dict['command_folder'])
 
 
-load_dotenv() # load .env file
+load_dotenv() #load .env file
+load_config() #load the botconfig.ini file
+
+
+
+
 TOKEN = os.getenv('DISCORD_TOKEN') #grab the DISCORD_TOKEN from env var
 GUILD = os.getenv('DISCORD_GUILD') #grab the DISCORD_GUILD from env var
 
-#bot prefix
-bot = commands.Bot(command_prefix ='!')
+#set bot prefix
+bot = commands.Bot(command_prefix = config_dict['command_prefix'])
 
 
 # @notice DM command, will send DM to specified user with a message. Only members who have the role 'Infosec' will be able to call this command.
